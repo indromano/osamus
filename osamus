@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Registro de Ganadores y Perdedores</title>
+</head>
+<body>
+  <h1>Registro de Ganadores y Perdedores</h1>
+
+  <div class="container">
+    <input type="text" id="nombre" placeholder="Nombre">
+    <button onclick="agregarPersona()">Agregar Persona</button>
+  </div>
+
+  <div class="container">
+    <h2>Personas</h2>
+    <ul id="listaPersonas"></ul>
+  </div>
+
+  <script src="scripts.js"></script>
+</body>
+</html>
+
+var personas = {}; // Objeto para mantener el registro de victorias y derrotas
+
+function agregarPersona() {
+  var nombre = document.getElementById('nombre').value;
+  if (nombre !== '') {
+    if (!personas[nombre]) {
+      personas[nombre] = { victorias: 0, derrotas: 0 }; // Inicializa el contador para cada persona
+    }
+    var lista = document.getElementById('listaPersonas');
+    var li = document.createElement('li');
+    li.textContent = `${nombre} - Victorias: ${personas[nombre].victorias}, Derrotas: ${personas[nombre].derrotas}`;
+
+    var ganarBtn = document.createElement('button');
+    ganarBtn.textContent = 'Ganó';
+    ganarBtn.onclick = function() {
+      marcarResultado(nombre, 'ganador');
+      personas[nombre].victorias++; // Aumenta el contador de victorias
+      actualizarLista();
+    };
+
+    var perderBtn = document.createElement('button');
+    perderBtn.textContent = 'Perdió';
+    perderBtn.onclick = function() {
+      marcarResultado(nombre, 'perdedor');
+      personas[nombre].derrotas++; // Aumenta el contador de derrotas
+      actualizarLista();
+    };
+
+    li.appendChild(ganarBtn);
+    li.appendChild(perderBtn);
+    lista.appendChild(li);
+
+    document.getElementById('nombre').value = '';
+  }
+}
+
+function marcarResultado(nombre, resultado) {
+  // Aquí podrías enviar una solicitud a un servidor para registrar el resultado
+  // Por ejemplo, utilizando AJAX, fetch o librerías como Axios.
+  // También necesitarías un backend (servidor) que maneje y almacene estos datos.
+  console.log(`Usuario ${nombre} marcado como ${resultado}`);
+}
+
+function actualizarLista() {
+  var lista = document.getElementById('listaPersonas');
+  lista.innerHTML = ''; // Borra la lista actual para actualizarla con los nuevos datos
+  for (var nombre in personas) {
+    var li = document.createElement('li');
+    li.textContent = `${nombre} - Victorias: ${personas[nombre].victorias}, Derrotas: ${personas[nombre].derrotas}`;
+    lista.appendChild(li);
+  }
+}
+
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 20px;
+}
+
+.container {
+  margin-bottom: 20px;
+}
+
+input[type="text"] {
+  padding: 8px;
+  margin-right: 10px;
+}
+
+button {
+  padding: 8px 15px;
+  cursor: pointer;
+}
+
+/* Estilos para los elementos ganadores y perdedores */
+.ganador {
+  background-color: lightgreen;
+}
+
+.perdedor {
+  background-color: pink;
+}
